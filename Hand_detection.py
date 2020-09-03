@@ -11,26 +11,26 @@ while True:
     grey1 = grey[:, :320]
     grey2 = grey[:, 320:]
 
-    handl = hand_cascade.detectMultiScale(grey1, 1.1, 5)
-    handr = hand_cascade.detectMultiScale(grey2, 1.1, 5)
+    handr = hand_cascade.detectMultiScale(grey1, 1.1, 5)
+    handl = hand_cascade.detectMultiScale(grey2, 1.1, 5)
 
     for (X,Y,W,H) in handl:
         # print(X,Y,W,H)
-        cv2.rectangle(image, (X, Y), (X + W, Y + H), (0, 255, 0), 2)
-        print(1)
-        roi_color = image[Y:Y + H, X:X + W]
+        #cv2.rectangle(image, (X, Y), (X + W, Y + H), (0, 255, 0), 2)
+        print("l")
+        #roi_color = image[Y:Y + H, X:X + W]
     for (X,Y,W,H) in handr:
         # print(X,Y,W,H)
-        cv2.rectangle(image, (X, Y), (X + W, Y + H), (0, 255, 0), 2)
-        print(2)
-        roi_color = image[Y:Y + H, X:X + W]
+        #cv2.rectangle(image, (X, Y), (X + W, Y + H), (0, 255, 0), 2)
+        print("r")
+        #roi_color = image[Y:Y + H, X:X + W]
     tmp=np.zeros((480,640))
     tmp1=image[:,320:]
     tmp2 = image[:, :320]
-    #cv2.imshow("image",image)
+    cv2.imshow("image",image)
 
-    cv2.imshow("sample", tmp1)
-    cv2.imshow("sample2", tmp2)
+    #cv2.imshow("sample", tmp1)
+    #cv2.imshow("sample2", tmp2)
 
     # print(image.shape)
     k=cv2.waitKey(1)
