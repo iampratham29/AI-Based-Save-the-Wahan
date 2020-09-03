@@ -1,0 +1,8 @@
+C:/Users/Prathmesh/Desktop/Zipa/YOLO-Annotation-Tool-master/YOLO-Annotation-Tool-master/Multi-Image-Train/left17.jpg
+C:/Users/Prathmesh/Desktop/Zipa/YOLO-Annotation-Tool-master/YOLO-Annotation-Tool-master/Multi-Image-Train/left26.jpg
+C:/Users/Prathmesh/Desktop/Zipa/YOLO-Annotation-Tool-master/YOLO-Annotation-Tool-master/Multi-Image-Train/left4.jpg
+C:/Users/Prathmesh/Desktop/Zipa/YOLO-Annotation-Tool-master/YOLO-Annotation-Tool-master/Multi-Image-Train/right12.jpg
+C:/Users/Prathmesh/Desktop/Zipa/YOLO-Annotation-Tool-master/YOLO-Annotation-Tool-master/Multi-Image-Train/right21.jpg
+C:/Users/Prathmesh/Desktop/Zipa/YOLO-Annotation-Tool-master/YOLO-Annotation-Tool-master/Multi-Image-Train/right30.jpg
+C:/Users/Prathmesh/Desktop/Zipa/YOLO-Annotation-Tool-master/YOLO-Annotation-Tool-master/Multi-Image-Train/right4.jpg
+C:/Users/Prathmesh/Desktop/Zipa/YOLO-Annotation-Tool-master/YOLO-Annotation-Tool-master/Multi-Image-Train/right5.jpg
