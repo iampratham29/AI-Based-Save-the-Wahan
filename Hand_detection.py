@@ -5,6 +5,7 @@ hand_cascade=cv2.CascadeClassifier('hand.xml')
 cap=cv2.VideoCapture(0)
 
 while True:
+    stroke=0
     ret,image=cap.read()
     grey = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
 
@@ -15,24 +16,18 @@ while True:
     handl = hand_cascade.detectMultiScale(grey2, 1.1, 5)
 
     for (X,Y,W,H) in handl:
-        # print(X,Y,W,H)
-        #cv2.rectangle(image, (X, Y), (X + W, Y + H), (0, 255, 0), 2)
+        stroke=1
+        hand=1
         print("l")
-        #roi_color = image[Y:Y + H, X:X + W]
     for (X,Y,W,H) in handr:
-        # print(X,Y,W,H)
-        #cv2.rectangle(image, (X, Y), (X + W, Y + H), (0, 255, 0), 2)
+        stroke = 1
+        hand = 2
         print("r")
-        #roi_color = image[Y:Y + H, X:X + W]
     tmp=np.zeros((480,640))
     tmp1=image[:,320:]
     tmp2 = image[:, :320]
     cv2.imshow("image",image)
 
-    #cv2.imshow("sample", tmp1)
-    #cv2.imshow("sample2", tmp2)
-
-    # print(image.shape)
     k=cv2.waitKey(1)
     if k==32:
         break
