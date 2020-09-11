@@ -1,6 +1,8 @@
 import pygame
 import time
 import random
+import cv2
+#import numpy as np
 
 # Lets go to code now
 mode = 0
@@ -150,7 +152,7 @@ def crash(x, y):
 
 def gameloop(bgimage, vehicleimg ):
     # pygame.mixer.Sound.stop()
-    from Hand_detection import stroke,hand
+    import game.Hand_detection as h
     pygame.mixer.music.play(-1)
     bg_x1 = 0
     bg_x2 = 0
@@ -169,25 +171,30 @@ def gameloop(bgimage, vehicleimg ):
     thing_speed = 3
     count = 0
     gameExit = False
+    hand_cascade = cv2.CascadeClassifier('hand.xml')
+    cap = cv2.VideoCapture(0)
 
     while not gameExit:
+        stroke = 0
+        ret, image = cap.read()
+        grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        grey1 = grey[:, :320]
+        grey2 = grey[:, 320:]
+
+        handr = hand_cascade.detectMultiScale(grey1, 1.1, 5)
+        handl = hand_cascade.detectMultiScale(grey2, 1.1, 5)
+
+        for (X, Y, W, H) in handl:
+            car_x_change = -5
+        for (X, Y, W, H) in handr:
+            car_x_change = +5
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameExit = True
                 pygame.quit()
                 quit()
-
-            if event.type == pygame.KEYDOWN or stroke:
-                if event.key == pygame.K_LEFT or hand==1:
-                    car_x_change = -5
-                elif event.key == pygame.K_RIGHT or hand==2:
-                    car_x_change = 5
-
-            if event.type == pygame.KEYUP or stroke==0:
-                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or hand:
-                    car_x_change = 0
-
         veh_x += car_x_change
 
         if veh_x > 800 - car_width:
@@ -207,9 +214,9 @@ def gameloop(bgimage, vehicleimg ):
         gameDisplay.blit(bgimage, (bg_x2, bg_y2))
         if bgimage == bgImg:
             vehicle(veh_x, veh_y, carImg)
-        if bgimage == bgbtImg :
+        if bgimage == bgbtImg:
             vehicle(veh_x, veh_y, boatImg)
-        if bgimage == bgspImg :
+        if bgimage == bgspImg:
             vehicle(veh_x, veh_y, spImg)
 
         draw_things(thing_startx, thing_starty, vehicleimg)
@@ -234,16 +241,11 @@ def gameloop(bgimage, vehicleimg ):
         pygame.display.update()  # update the screen
         clock.tick(60)  # frame per sec
 
-commence()
-if mode == 1:
-    bgimage = bgImg
-    vehicleimg = car2Img
+        k = cv2.waitKey(1)
+        if k == 32:
+            break
+    cap.release()
+    cv2.destroyAllWindows()
 
-if mode == 2:
-    bgimage = bgbtImg
-    vehicleimg = boat2Img
 
-if mode == 3:
-    bgimage = bgspImg
-    vehicleimg = sp2Img
-gameloop(bgimage=bgimage, vehicleimg=vehicleimg)
+
