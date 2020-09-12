@@ -1,4 +1,6 @@
-import game.ek as g
+import game.gameloop as g
+from game.media import *
+
 g.commence()
 if g.mode == 1:
     bgimage = g.bgImg

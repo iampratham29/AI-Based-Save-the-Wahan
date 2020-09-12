@@ -1,32 +1,8 @@
 import pygame
-import time
-import random
-import cv2
-from game.geometry import *
-#import numpy as np
-
-# Lets go to code now
+import time, random, cv2
+from game.utils import vehicle,draw_things,highscore,message_display
+from game.media import *
 mode = 0
-
-pygame.init()
-# start_music = pygame.mixer.Sound("Hurry_Up.mp3")
-pygame.mixer.music.load("music1.mp3")
-gameDisplay = pygame.display.set_mode((display_width, display_height))
-pygame.display.set_caption("Racing")
-clock = pygame.time.Clock()
-
-spImg = pygame.image.load("rocket1.png")  # load the car image
-sp2Img = pygame.image.load("obstacle.png")
-bgspImg = pygame.image.load("space.png")
-crash_img = pygame.image.load("crash.png")
-
-carImg = pygame.image.load("car1.png")  # load the car image
-car2Img = pygame.image.load("car2.png")
-bgImg = pygame.image.load("back2.png")
-
-boatImg = pygame.image.load("boat.png")  # load the car image
-boat2Img = pygame.image.load("shark.png")
-bgbtImg = pygame.image.load("water.png")
 
 
 def commence():
@@ -89,32 +65,6 @@ def commence():
 
         pygame.display.update()
         clock.tick(50)
-
-
-def highscore(count):
-    font = pygame.font.SysFont(None, 20)
-    text = font.render("Score : " + str(count), True, white)
-    gameDisplay.blit(text, (0, 0))
-
-
-def draw_things(thingx, thingy, thing):
-    gameDisplay.blit(thing, (thingx, thingy))
-
-
-def vehicle(x, y, vehimage):
-    gameDisplay.blit(vehimage, (x, y))
-
-
-def text_objects(text, font):
-    textSurface = font.render(text, True, blue)
-    return textSurface, textSurface.get_rect()
-
-
-def message_display(text, size, x, y):
-    font = pygame.font.Font("freesansbold.ttf", size)
-    text_surface, text_rectangle = text_objects(text, font)
-    text_rectangle.center = (x, y)
-    gameDisplay.blit(text_surface, text_rectangle)
 
 
 # noinspection PyShadowingNames
@@ -180,12 +130,15 @@ def gameloop(bgimage, vehicleimg ):
         for (X, Y, W, H) in handr:
             car_x_change = +5
 
+
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameExit = True
                 pygame.quit()
                 quit()
         veh_x += car_x_change
+        car_x_change /= (abs(car_x_change)+1)
 
         if veh_x > 800 - car_width:
             crash(veh_x, veh_y)
@@ -236,6 +189,3 @@ def gameloop(bgimage, vehicleimg ):
             break
     cap.release()
     cv2.destroyAllWindows()
-
-
-
