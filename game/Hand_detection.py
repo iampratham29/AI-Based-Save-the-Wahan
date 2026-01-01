@@ -1,37 +1,52 @@
 import cv2
+import mediapipe as mp
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
 import numpy as np
-def handy():
-    hand_cascade=cv2.CascadeClassifier('hand.xml')
-    cap=cv2.VideoCapture(0)
+import os
 
-    while True:
-        stroke=0
-        ret,image=cap.read()
-        grey = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+class HandDetector:
+    def __init__(self, model_path='hand_landmarker.task', maxHands=1):
+        # Create an HandLandmarker object.
+        base_options = python.BaseOptions(model_asset_path=model_path)
+        options = vision.HandLandmarkerOptions(
+            base_options=base_options,
+            num_hands=maxHands)
+        self.landmarker = vision.HandLandmarker.create_from_options(options)
+        self.results = None
 
-        grey1 = grey[:, :320]
-        grey2 = grey[:, 320:]
+    def findHands(self, img, draw=True):
+        # Convert the BGR image to RGB
+        rgb_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        
+        # Load the input image from a numpy array.
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_image)
+        
+        # Detect hand landmarks from the input image.
+        self.results = self.landmarker.detect(mp_image)
 
-        handr = hand_cascade.detectMultiScale(grey1, 1.1, 5)
-        handl = hand_cascade.detectMultiScale(grey2, 1.1, 5)
+        if self.results.hand_landmarks:
+            for hand_landmarks in self.results.hand_landmarks:
+                if draw:
+                    # Draw landmarks manually since solutions.drawing_utils is missing
+                    h, w, _ = img.shape
+                    for landmark in hand_landmarks:
+                        cx, cy = int(landmark.x * w), int(landmark.y * h)
+                        cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
+                    
+                    # Draw connections (simplified)
+                    # We can add full connection drawing if needed, but points are enough for now
+        return img
 
-        for (X,Y,W,H) in handl:
-            stroke=1
-            hand=1
-            yield (stroke,hand)
-            print("l")
-        for (X,Y,W,H) in handr:
-            stroke = 1
-            hand = 2
-            yield (stroke, hand)
-            print("r")
-        tmp=np.zeros((480,640))
-        tmp1=image[:,320:]
-        tmp2 = image[:, :320]
-        cv2.imshow("image",image)
-
-        k=cv2.waitKey(1)
-        if k==32:
-            break
-    cap.release()
-    cv2.destroyAllWindows()
+    def findPosition(self, img, handNo=0, draw=True):
+        lmList = []
+        if self.results and self.results.hand_landmarks:
+            if len(self.results.hand_landmarks) > handNo:
+                myHand = self.results.hand_landmarks[handNo]
+                h, w, c = img.shape
+                for id, landmark in enumerate(myHand):
+                    cx, cy = int(landmark.x * w), int(landmark.y * h)
+                    lmList.append([id, cx, cy])
+                    if draw and id == 8: # Index finger tip
+                        cv2.circle(img, (cx, cy), 15, (255, 0, 255), cv2.FILLED)
+        return lmList
